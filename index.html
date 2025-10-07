@@ -116,31 +116,41 @@
     }
 
     // Render helpers
-    function renderItem(item){
-      const isFile = item.type === "file";
-      const name = item.name;
-      const path = item.path;
-      const size = niceSize(item.size);
-      const title = name.replace(/\.html?$/i, '').replace(/[-_]/g,' ');
-      const excerpt = item.type === "file" ? `Click to open the file preview.` : `Directory: ${name}`;
-      const openLink = isFile ? rawUrl(path) : `https://github.com/${OWNER}/${REPO}/tree/${BRANCH}/${path}`;
-      const openOnGH = githubUrl(path);
+    function renderItem(item) {
+        const isFile = item.type === "file";
+        const name = item.name;
+        const path = item.path;
+        const size = niceSize(item.size);
+        const title = name.replace(/\.html?$/i, '').replace(/[-_]/g, ' ');
+        const excerpt = isFile
+            ? `Click to view the rendered page.`
+            : `Directory: ${name}`;
+        
+        // 👇 Use your live custom domain to render HTML files directly
+        const domainBase = `https://${location.hostname}`; // works for custom domains too
+        const openLink = isFile
+            ? `${domainBase}/AutoPublish/output/html/${encodeURIComponent(name)}`
+            : `https://github.com/${OWNER}/${REPO}/tree/${BRANCH}/${path}`;
+        
+        const openOnGH = `https://github.com/${OWNER}/${REPO}/blob/${BRANCH}/${path}`;
 
-      return `
-        <article class="card" data-name="${name.toLowerCase()}" data-type="${item.type}">
-          <div class="meta"><span>${item.type.toUpperCase()}</span><span>${size}</span></div>
-          <div class="title">${title}</div>
-          <div class="excerpt">${excerpt}</div>
-          <div class="badges">
-            <span class="badge">${path}</span>
-          </div>
-          <div class="actions">
-            <a class="btn" href="${openLink}" target="_blank" rel="noopener">Open</a>
-            <a class="btn ghost" href="${openOnGH}" target="_blank" rel="noopener">Open on GitHub</a>
-          </div>
-        </article>
-      `;
-    }
+        return `
+            <article class="card" data-name="${name.toLowerCase()}" data-type="${item.type}">
+            <div class="meta">
+                <span>${item.type.toUpperCase()}</span><span>${size}</span>
+            </div>
+            <div class="title">${title}</div>
+            <div class="excerpt">${excerpt}</div>
+            <div class="badges">
+                <span class="badge">${path}</span>
+            </div>
+            <div class="actions">
+                <a class="btn" href="${openLink}" target="_blank" rel="noopener">Open</a>
+                <a class="btn ghost" href="${openOnGH}" target="_blank" rel="noopener">View on GitHub</a>
+            </div>
+            </article>
+        `;
+        }
 
     /* ---------- Core: fetch directory contents from GitHub API ---------- */
     async function fetchContents(){
