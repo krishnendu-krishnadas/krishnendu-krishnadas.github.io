@@ -46,7 +46,7 @@
   IMPORTANT: set data-owner and data-repo to your GitHub user/org and repo name.
   Example: <body data-owner="krishnendu-krishnadas" data-repo="krishnendu-krishnadas.github.io" data-branch="main">
 -->
-<body data-owner="" data-repo="" data-branch="main">
+<body data-owner="krishnendu-krishnadas" data-repo="krishnendu-krishnadas.github.io" data-branch="main">
   <div class="wrap">
     <header>
       <div class="brand">
@@ -262,7 +262,7 @@
               const name = href.split('/').filter(Boolean).pop() || href;
               return {
                 name,
-                path: `html/${name}`,
+                path: `AutoPublish/output/html/${name}`,
                 size: null,
                 type: name.endsWith('/') ? 'dir' : (name.match(/\.(html?|md|txt)$/i) ? 'file' : 'file'),
                 download_url: `./html/${name}`
